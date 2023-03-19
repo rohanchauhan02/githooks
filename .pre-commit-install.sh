@@ -1,12 +1,4 @@
-#!/bin/sh
-
-cp .githook/pre-commit .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-
-
-touch .git/hooks/post-clone
-chmod +x .git/hooks/post-clone
-
+#!/bin/bash
 
 # Check if pre-commit is already installed
 if ! command -v pre-commit &> /dev/null
