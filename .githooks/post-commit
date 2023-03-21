@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Define the path to the VERSION file
+VERSION_FILE="VERSION"
+
+# Check if the VERSION file exists
+if [ ! -f "$VERSION_FILE" ]; then
+  echo "ERROR: $VERSION_FILE not found!"
+  exit 1
+fi
+
+# Get the current version from the VERSION file
+CURRENT_VERSION=$(cat "$VERSION_FILE")
+
+# Use git describe to get the latest tag and commit hash
+GIT_DESCRIBE=$(git describe --tags --abbrev=0)
+GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
+
+# Parse the latest tag to get the major, minor, and patch versions
+MAJOR=$(echo "$GIT_DESCRIBE" | cut -d. -f1)
+MINOR=$(echo "$GIT_DESCRIBE" | cut -d. -f2)
+PATCH=$(echo "$GIT_DESCRIBE" | cut -d. -f3)
+
+# Determine the type of change (major, minor, or patch)
+if git log --oneline "$GIT_DESCRIBE..HEAD" | grep -qE '^(feat|fix|perf)(\(.+\))?:'; then
+  TYPE="minor"
+elif git log --oneline "$GIT_DESCRIBE..HEAD" | grep -qE '^(BREAKING CHANGE|feat|fix|perf)(\(.+\))?:'; then
+  TYPE="major"
+else
+  TYPE="patch"
+fi
+
+# Update the version based on the type of change
+if [ "$TYPE" = "major" ]; then
+  NEW_VERSION="$((MAJOR+1)).0.0"
+elif [ "$TYPE" = "minor" ]; then
+  NEW_VERSION="$MAJOR.$((MINOR+1)).0"
+else
+  NEW_VERSION="$MAJOR.$MINOR.$((PATCH+1))"
+fi
+
+# Update the VERSION file
+echo "$NEW_VERSION" > "$VERSION_FILE"
+
+# Create a new tag with the updated version
+git tag -a -m "Version $NEW_VERSION" "v$NEW_VERSION" "$GIT_COMMIT_HASH"

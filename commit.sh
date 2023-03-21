@@ -12,7 +12,7 @@ case $change_type in
     commit_message="fix: "
     ;;
   "breaking change")
-    commit_message="chore: "
+    commit_message="BREAKING CHANGE: "
     ;;
   *)
     echo "Invalid change type. Please enter 'new feature', 'bug fix', or 'breaking change'."

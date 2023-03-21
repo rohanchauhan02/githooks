@@ -21,3 +21,9 @@ then
     # Clean up the downloaded pre-commit binary
     rm pre-commit
 fi
+
+# Run the ./commit.sh script before creating a commit
+if sh ./commit.sh; then
+    git add .
+    git commit
+fi
