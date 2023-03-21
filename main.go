@@ -8,14 +8,14 @@ import (
 func main() {
 	fmt.Printf("Hello World\n");
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter,r *http.Request) {
 		fmt.Fprintf(w, "hello, %q", r.URL.Path)
 	})
 
-	http.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/hi", func(w http.ResponseWriter,r *http.Request) {
 		fmt.Fprintf(w, "Hi")
 	})
 
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080",nil)
 	println(err);
 }
